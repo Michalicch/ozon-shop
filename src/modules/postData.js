@@ -1,6 +1,5 @@
 const postData = (str) => {
-
-	
+		
 	return fetch('http://localhost:3000/goods', {
 		method: 'POST',
 		body: JSON.stringify({			
@@ -14,9 +13,7 @@ const postData = (str) => {
 			'Content-type': 'application/json; charset=UTF-8',
 		},
 	})
-	.then(res => res.json())
-	
-	
+	.then(res => res.json())	
 }
 
 export default postData;
