@@ -1,8 +1,7 @@
 import getData from "./getData"
 import renderGoods from "./renderGoods"
-import { searchFilter } from "./filters"
+import { funcFilter } from "./filters"
 import { debounce } from "./helpers"
-import { priceFilter } from "./filters"
 
 const search = () => {
 	const searchInput = document.querySelector('.search-wrapper_input')
@@ -11,33 +10,25 @@ const search = () => {
 	const checkSale = document.getElementById('discount-checkbox')
 	const checkMark = document.querySelector('.filter-check_checkmark')
 
-	const debounceSearch = debounce((event)=>{
-		getData().then((data) => {
-			renderGoods(searchFilter(data, event.target.value));
-		})
-	}, 2000)	
-//, sale = false
-	const debouncePrice = debounce((min = '', max = '', sale = false)=>{
+	const debounceFunc = debounce((min = '', max = '', sale = false, searchValue = '') => {
 		getData().then((data => {
-			renderGoods(priceFilter(data, min, max, sale));
+			renderGoods(funcFilter(data, min, max, sale, searchValue));
 		}))
-	})	
-	
-	searchInput.addEventListener('input', debounceSearch)	
-
-	minInp.addEventListener('input', (event) =>{
-		debouncePrice(minInp.value, maxInp.value, checkSale.value)
-	})
-	maxInp.addEventListener('input', (event) =>{
-		debouncePrice(minInp.value, maxInp.value, checkSale.value)
 	})
 
-	checkSale.addEventListener('change', ()=>{		
-		checkMark.classList.toggle('checked')		
-		debouncePrice(minInp.value, maxInp.value, checkSale.checked)
+	searchInput.addEventListener('input', () => {
+		debounceFunc(minInp.value, maxInp.value, checkSale.value, searchInput.value)
 	})
-
-
+	minInp.addEventListener('input', () => {
+		debounceFunc(minInp.value, maxInp.value, checkSale.value, searchInput.value)
+	})
+	maxInp.addEventListener('input', () => {
+		debounceFunc(minInp.value, maxInp.value, checkSale.value, searchInput.value)
+	})
+	checkSale.addEventListener('change', () => {
+		checkMark.classList.toggle('checked')
+		debounceFunc(minInp.value, maxInp.value, checkSale.checked, searchInput.value)
+	})
 }
 
 export default search
